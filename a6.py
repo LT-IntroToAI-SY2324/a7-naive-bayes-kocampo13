@@ -66,10 +66,10 @@ class BayesClassifier:
         # enumerate function, which loops over something and has an automatic counter.
         # write something like this to track progress (note the `# type: ignore` comment
         # which tells mypy we know better and it shouldn't complain at us on this line):
-        # for index, filename in enumerate(files, 1): # type: ignore
+        for index, filename in enumerate(files, 1): # type: ignore
         #     print(f"Training on file {index} of {len(files)}")
         #     <the rest of your code for updating frequencies here>
-
+            text = self.load_file(os.path.join(self.training_data_directory, filename))        
 
         # we want to fill pos_freqs and neg_freqs with the correct counts of words from
         # their respective reviews
@@ -81,7 +81,19 @@ class BayesClassifier:
         # positive frequency dictionary. If it is neither a postive or negative file,
         # ignore it and move to the next file (this is more just to be safe; we won't
         # test your code with neutral reviews)
+            tokens = self.tokenize(text)
         
+            if filename.startswith(self.pos_file_prefix):
+                self.update_dict(tokens, self.pos_freqs)
+                
+            elif filename.startswith(self.neg_file_prefix):
+                self.update_dict(tokens, self.neg_freqs)   
+            
+                 
+        print(filename.startswith[self.pos_filename_prefix])
+        print(filename.startswith[self.neg_filename_prefix])
+        tokens = self.tokenize(text)
+        print(tokens)
 
         # Updating frequences: to update the frequencies for each file, you need to get
         # the text of the file, tokenize it, then update the appropriate dictionary for
