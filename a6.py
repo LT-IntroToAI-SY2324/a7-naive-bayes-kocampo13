@@ -59,7 +59,7 @@ class BayesClassifier:
         # stored below is how you would load a file with filename given by `fName`
         # `text` here will be the literal text of the file (i.e. what you would see
         # if you opened the file in a text editor
-        # text = self.load_file(os.path.join(self.training_data_directory, fName))
+        text = self.load_file(os.path.join(self.training_data_directory, fName))
 
 
         # *Tip:* training can take a while, to make it more transparent, we can use the
