@@ -132,7 +132,8 @@ class BayesClassifier:
         # create some variables to store the positive and negative probability. since
         # we will be adding logs of probabilities, the initial values for the positive
         # and negative probabilities are set to 0
-        
+        pos_prob = 0
+        neg_prob = 0
 
         # get the sum of all of the frequencies of the features in each document class
         # (i.e. how many words occurred in all documents for the given class) - this
@@ -149,15 +150,29 @@ class BayesClassifier:
         # running sums. when calculating the probabilities, always add 1 to the numerator
         # of each probability for add one smoothing (so that we never have a probability
         # of 0)
+        for word in tokens:
+            num_pos_appearances = 1
+            if word in self.pos_freqs:
+                num_pos_appearances += self.pos_freqs[word]
+                
+            pos_prob += math.log(num_pos_appearances/num_pos_words)
+            
+            num_neg_appearances = 1
+            if word in self.neg_freqs:
+                num_neg_appearances += self.neg_freqs[word]
+            
+            neg_prob += math.log(num_neg_appearances/num_neg_words)
 
-
+            
+            
         # for debugging purposes, it may help to print the overall positive and negative
         # probabilities
         
 
         # determine whether positive or negative was more probable (i.e. which one was
         # larger)
-        
+        if pos_prob > neg_prob:
+            
 
         # return a string of "positive" or "negative"
 
