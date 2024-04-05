@@ -59,7 +59,6 @@ class BayesClassifier:
         # stored below is how you would load a file with filename given by `fName`
         # `text` here will be the literal text of the file (i.e. what you would see
         # if you opened the file in a text editor
-        text = self.load_file(os.path.join(self.training_data_directory, fName))
 
 
         # *Tip:* training can take a while, to make it more transparent, we can use the
@@ -67,10 +66,11 @@ class BayesClassifier:
         # write something like this to track progress (note the `# type: ignore` comment
         # which tells mypy we know better and it shouldn't complain at us on this line):
         for index, filename in enumerate(files, 1): # type: ignore
-        #     print(f"Training on file {index} of {len(files)}")
-        #     <the rest of your code for updating frequencies here>
-            text = self.load_file(os.path.join(self.training_data_directory, filename))        
-
+            print("--------------------------------------")
+            print(f"Training on file {index} of {len(files)}")
+            print(filename)
+            text = self.load_file(os.path.join(self.training_data_directory, filename))
+            print(text)
         # we want to fill pos_freqs and neg_freqs with the correct counts of words from
         # their respective reviews
         
@@ -81,26 +81,25 @@ class BayesClassifier:
         # positive frequency dictionary. If it is neither a postive or negative file,
         # ignore it and move to the next file (this is more just to be safe; we won't
         # test your code with neutral reviews)
-            tokens = self.tokenize(text)
         
-            if filename.startswith(self.pos_file_prefix):
-                self.update_dict(tokens, self.pos_freqs)
-                
-            elif filename.startswith(self.neg_file_prefix):
-                self.update_dict(tokens, self.neg_freqs)   
+            print(filename.startswith(self.pos_file_prefix))
+            print(filename.startswith(self.neg_file_prefix))
+            tokens = self.tokenize(text)
+            print(tokens) 
             
-                 
-        print(filename.startswith[self.pos_filename_prefix])
-        print(filename.startswith[self.neg_filename_prefix])
-        tokens = self.tokenize(text)
-        print(tokens)
-
         # Updating frequences: to update the frequencies for each file, you need to get
         # the text of the file, tokenize it, then update the appropriate dictionary for
         # those tokens. We've asked you to write a function `update_dict` that will make
         # your life easier here. Write that function first then pass it your list of
         # tokens from the file and the appropriate dictionary
         
+        if filename.startswith(self.pos_file_prefix):
+                self.update_dict(tokens, self.pos_freqs)
+            elif filename.startswith(self.neg_file_prefix):
+                self.update_dict(tokens, self.neg_freqs)
+        
+        print(len(self.pos_freqs))
+        print(len(self.neg_freqs))
 
         # for debugging purposes, it might be useful to print out the tokens and their
         # frequencies for both the positive and negative dictionaries
@@ -127,7 +126,8 @@ class BayesClassifier:
 
         
         # get a list of the individual tokens that occur in text
-        
+        tokens = self.tokenize(text)
+        print(tokens)
 
         # create some variables to store the positive and negative probability. since
         # we will be adding logs of probabilities, the initial values for the positive
@@ -172,7 +172,10 @@ class BayesClassifier:
         # determine whether positive or negative was more probable (i.e. which one was
         # larger)
         if pos_prob > neg_prob:
-            
+            return "positive"
+        
+        else:
+            return "negative"
 
         # return a string of "positive" or "negative"
 
@@ -255,16 +258,21 @@ class BayesClassifier:
             freqs - dictionary of frequencies to update
         """
         # TODO: your work here
-        pass  # remove this line once you've implemented this method
-
+        
+        for word in words:
+            # print(word)
+            if word in freqs:
+                freqs[word] += 1 
+            else:
+                freqs[word] = 1 
 
 if __name__ == "__main__":
     # uncomment the below lines once you've implemented `train` & `classify`
     b = BayesClassifier()
     a_list_of_words = ["I", "really", "like", "this", "movie", ".", "I", "hope", \
                        "you", "like", "it", "too"]
-    a_dictionary = {}
-    b.update_dict(a_list_of_words, a_dictionary)
+    # a_dictionary = {}
+    # b.update_dict(a_list_of_words, a_dictionary)
     # assert a_dictionary["I"] == 2, "update_dict test 1"
     # assert a_dictionary["like"] == 2, "update_dict test 2"
     # assert a_dictionary["really"] == 1, "update_dict test 3"
@@ -303,8 +311,8 @@ if __name__ == "__main__":
     # # uncomment the below lines once you've implemented `classify`
     print("\nThe following should all be positive.")
     print(b.classify('I love computer science'))
-    # print(b.classify('this movie is fantastic'))
-    # print("\nThe following should all be negative.")
-    # print(b.classify('rainy days are the worst'))
-    # print(b.classify('computer science is terrible'))
+    print(b.classify('this movie is fantastic'))
+    print("\nThe following should all be negative.")
+    print(b.classify('rainy days are the worst'))
+    print(b.classify('computer science is terrible'))
     pass
